@@ -1,70 +1,1 @@
-import { OrbitControls, Sky } from '@react-three/drei'
-import { Canvas } from '@react-three/fiber'
-import React from 'react'
-import * as THREE from 'three'
-
-function Room() {
-  return (
-    <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-        <planeGeometry args={[20, 20]}/>
-        <meshStandardMaterial color="gray"/>
-      </mesh>
-
-      <mesh position={[0, 2.5, -5]}>
-        <boxGeometry args={[10, 5, 0.5]}/>
-        <meshStandardMaterial color="orange"/>
-      </mesh>
-
-      <mesh position={[-5, 2.5, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <boxGeometry args={[10, 5, 0.5]}/>
-        <meshStandardMaterial color="lightblue"/>
-      </mesh>
-
-      <mesh position={[5, 2.5, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <boxGeometry args={[10, 5, 0.5]}/>
-        <meshStandardMaterial color="lightgreen"/>
-      </mesh>
-
-      <mesh position={[0, 2.5, 5]}>
-        <boxGeometry args={[10, 5, 0.5]}/>
-        <meshStandardMaterial color="black"/>
-      </mesh>
-
-      <mesh position={[0, 1, 0]}>
-        <boxGeometry args={[1, 1, 1]}/>
-        <meshStandardMaterial color="red"/>
-      </mesh>
-    </group>
-  )
-}
-
-export default function App() {
-  return (
-    <div style={{ width: '100vw', height: '100vh' }}>
-      <Canvas camera={{ position: [0, 2, 8], fov: 60 }}>
-        <ambientLight intensity={0.5}/>
-        <pointLight position={[10, 10, 10]} intensity={1}/>
-
-        <Sky sunPosition={[100, 20, 100]}/>
-
-        <Room/>
-
-
-        <OrbitControls
-          mouseButtons={{
-            MIDDLE: THREE.MOUSE.DOLLY,
-            LEFT: THREE.MOUSE.ROTATE
-          }}
-
-          screenSpacePanning={true}
-
-          maxPolarAngle={Math.PI / 2}
-        />
-
-        {/* <PointerLockControls />*/}
-      </Canvas>
-
-    </div>
-  )
-}
+import Circle from '@/feature/Circle.jsx'import { CameraControls, Center, Environment, useGLTF } from '@react-three/drei'import { Canvas } from '@react-three/fiber'import React, { useRef } from 'react'function RoomModel() {  const { scene } = useGLTF('/planirovka.glb')  return (    <Center top>      <primitive object={scene}/>    </Center>  )}export default function App() {  const cameraControlsRef = useRef()  return (    <div style={{ width: '100vw', height: '100vh' }}>      <Canvas camera={{ position: [10, 10, 10], fov: 45 }}>        <CameraControls          ref={cameraControlsRef}          enablePan={false}          makeDefault          minDistance={0.5}          maxDistance={15}          // mouseButtons={{ left: THREE.MOUSE.ROTATE, right: THREE.MOUSE.ROTATE }}          minPolarAngle={0}          maxPolarAngle={Math.PI / 2.4}        />        <Environment preset="city"/>        <RoomModel/>        <Circle cameraControlsRef={cameraControlsRef}/>        {/*<OrbitControls*/}        {/*  target={[0, 0, 0]}*/}        {/*  enablePan={false}*/}        {/*  ref={cameraControlsRef}*/}        {/*  makeDefault*/}        {/*  minDistance={3}*/}        {/*  maxDistance={5}*/}        {/*  mouseButtons={{*/}        {/*    LEFT: THREE.MOUSE.ROTATE*/}        {/*  }}*/}        {/*  dampingFactor={0.05}*/}        {/*  enableDamping={true}*/}        {/*  minPolarAngle={0}*/}        {/*  maxPolarAngle={Math.PI / 2.3}*/}        {/*/>*/}      </Canvas>    </div>  )}
